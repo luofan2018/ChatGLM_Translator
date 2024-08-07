@@ -28,3 +28,18 @@ class GLMModel(Model):
         except Exception as e:
             raise Exception(f"发生了未知错误：{e}")
         return "", False
+
+class ChatGLMModel(Model):
+    def __init__(self, model,tokenizer,history):
+        self.model = model
+        self.tokenizer = tokenizer
+        self.history = history
+
+    def make_request(self, prompt):
+        try:
+            response, self.history = self.model.chat(self.tokenizer, prompt, history=self.history)
+            translation = response
+            return translation, True
+        except Exception as e:
+            raise Exception(f"发生了未知错误：{e}")
+        return "", False
