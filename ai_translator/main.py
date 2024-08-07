@@ -4,11 +4,11 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from utils import ArgumentParser, ConfigLoader, LOG
-from model import GLMModel, OpenAIModel
+from model import ChatGLMModel, OpenAIModel
 from translator import PDFTranslator
-import webbrowser
+#import webbrowser
 import gradio  as gr
-import markdown
+#import markdown
 
 def processData(pdf_file_path,file_format):
     translator = PDFTranslator(model)
@@ -28,7 +28,12 @@ if __name__ == "__main__":
 
     model_name = args.openai_model if args.openai_model else config['OpenAIModel']['model']
     api_key = args.openai_api_key if args.openai_api_key else config['OpenAIModel']['api_key']
-    model = OpenAIModel(model=model_name, api_key=api_key)
+    #model = OpenAIModel(model=model_name, api_key=api_key)
+    from transformers import AutoTokenizer, AutoModel
+    tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm3-6b", trust_remote_code=True)
+    model = AutoModel.from_pretrained("THUDM/chatglm3-6b", trust_remote_code=True, device='cuda')
+    model = model.eval()
+    model = ChatGLMModel(model=model,tokenizer=tokenizer,history=[])
     
     iface = gr.Interface(
         fn=processData,
