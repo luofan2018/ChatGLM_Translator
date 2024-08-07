@@ -51,6 +51,25 @@ The OpenAI Translator is still in its early stages of development, and I'm activ
 
 3.Set up your OpenAI API key(`$OPENAI_API_KEY`) or ChatGLM Model URL(`$GLM_MODEL_URL`). You can either add it to your environment variables or specify it in the config.yaml file.
 
+4. install chatglm3 in the folder, and install the requirements.txt files in root folder and ChatGLM3 folder
+```bash
+>cd ChatGLM_Translator
+>conda install ChatGLM3\requirements.txt
+>git clone https://github.com/THUDM/ChatGLM3
+```
+
+5. finish the first time downloading the model: this will take a while
+```bash
+>python
+>> from transformers import AutoTokenizer, AutoModel
+>> tokenizer = AutoTokenizer.from_pretrained("THUDM/chatglm3-6b", trust_remote_code=True)
+>> model = AutoModel.from_pretrained("THUDM/chatglm3-6b", trust_remote_code=True, device='cuda')
+>> model = model.eval()
+>> response, history = model.chat(tokenizer, "你好", history=[])
+>> print(response)
+>> quit()
+```
+
 ### Usage
 
 You can use OpenAI-Translator either by specifying a configuration file or by providing command-line arguments.
@@ -76,7 +95,7 @@ common:
 Then run the tool:
 
 ```bash
-python ai_translator/main.py
+python ai_translator/main.py --model_type ChatGLMModel
 ```
 
 ![sample_out](images/sample_image_1.png)
